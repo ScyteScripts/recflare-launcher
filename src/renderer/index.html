@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data: https://img.recflare.net; style-src 'self'; font-src 'self'; script-src 'self'; connect-src https://www.recflare.net https://api.recflare.net https://rooms.recflare.net https://accounts.recflare.net"
+    />
+    <title>RecFlare Launcher</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="play-bg" aria-hidden="true">
+      <img class="play-photo" id="hero-photo" alt="" hidden />
+      <span class="play-shade"></span>
+    </div>
+    <div class="app">
+      <aside class="dock">
+        <div class="dock-panel">
+          <div class="brand drag">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span class="brand-name">RecFlare</span>
+          </div>
+          <nav class="dock-nav" aria-label="Pages">
+            <button class="dock-link" data-view="play" aria-current="page">
+              <span data-icon="gamepad-2"></span>RecFlare
+            </button>
+            <button class="dock-link" data-view="studio"><span data-icon="box"></span>Studio</button>
+          </nav>
+          <nav class="dock-nav dock-nav-bottom" aria-label="Settings">
+            <button class="dock-link" data-view="settings">
+              <span data-icon="settings"></span>Settings
+            </button>
+          </nav>
+          <div class="dock-foot">
+            <button class="btn primary block" id="sign-in" hidden>
+              <span data-icon="log-in"></span>Sign in
+            </button>
+            <div class="account" id="account">
+              <span class="avatar" id="account-avatar"></span>
+              <span class="account-text">
+                <span class="account-name" id="account-name"></span>
+                <span class="account-sub" id="account-sub"></span>
+              </span>
+              <button class="btn ghost icon" id="sign-out" aria-label="Sign out">
+                <span data-icon="log-out"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main">
+        <header class="titlebar drag">
+          <span></span>
+          <div class="window-controls no-drag">
+            <button class="win" data-win="minimize" aria-label="Minimize">
+              <span data-icon="minus"></span>
+            </button>
+            <button class="win" data-win="maximize" aria-label="Maximize">
+              <span data-icon="square"></span>
+            </button>
+            <button class="win close" data-win="close" aria-label="Close">
+              <span data-icon="x"></span>
+            </button>
+          </div>
+        </header>
+
+        <main class="content">
+          <section class="view active" id="view-play" data-title="RecFlare">
+            <div class="hero hero-play">
+              <span class="photo-credit" id="photo-credit"></span>
+              <div class="hero-body">
+                <h1 class="flare-logo">
+                  <span class="flare-mark" aria-hidden="true"></span>
+                  <span class="flare-word">RecFlare</span>
+                </h1>
+                <p class="lead" id="game-line"></p>
+                <div class="btn-row">
+                  <button class="btn primary lg" id="play"><span data-icon="play"></span>Play</button>
+                  <button class="btn glass lg" id="play-vr">
+                    <span data-icon="glasses"></span>Play in VR
+                  </button>
+                  <button class="btn primary lg" id="install" hidden>
+                    <span data-icon="download"></span>Install
+                  </button>
+                </div>
+                <div class="task" id="game-task" hidden>
+                  <div class="task-head">
+                    <span id="game-task-text"></span><span id="game-task-pct"></span>
+                  </div>
+                  <div class="progress"><div class="progress-bar" id="game-bar"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <dl class="stats" id="stats"></dl>
+
+            <section class="block">
+              <div class="block-head">
+                <h2>Hot right now</h2>
+                <button class="btn ghost sm" data-open="https://www.recflare.net/rooms">
+                  <span data-icon="external-link"></span>All rooms
+                </button>
+              </div>
+              <ul class="rooms" id="rooms"></ul>
+            </section>
+
+          </section>
+
+          <section class="view" id="view-studio" data-title="Studio">
+            <div class="hero hero-studio">
+              <div class="hero-body">
+                <img class="studio-logo" src="img/studio-logo.png" alt="RecFlare Studio" />
+                <p class="lead">Build rooms and avatar items in Unity, then upload them to RecFlare.</p>
+                <div class="btn-row">
+                  <button class="btn primary lg" id="studio-new">
+                    <span data-icon="plus"></span>New project
+                  </button>
+                  <button class="btn glass lg" id="studio-add">
+                    <span data-icon="folder-plus"></span>Add existing
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="strip">
+              <span class="live-dot" id="unity-dot"></span>
+              <div class="strip-text">
+                <div class="strip-title" id="unity-title"></div>
+                <div class="strip-sub" id="unity-sub"></div>
+              </div>
+            </div>
+
+            <form class="panel new-project" id="new-project" hidden>
+              <h2>New project</h2>
+              <div class="btn-row">
+                <input
+                  id="new-name"
+                  class="input"
+                  maxlength="64"
+                  placeholder="My Room"
+                  autocomplete="off"
+                  aria-label="Project name"
+                />
+                <button class="btn primary" type="submit">Create</button>
+                <button class="btn ghost" type="button" id="new-cancel">Cancel</button>
+              </div>
+            </form>
+
+            <section class="block">
+              <div class="block-head"><h2>Projects</h2></div>
+              <ul class="projects" id="projects"></ul>
+              <p class="empty" id="projects-empty" hidden>
+                No projects yet. Start one with New project.
+              </p>
+            </section>
+          </section>
+
+          <section class="view" id="view-settings" data-title="Settings">
+            <div class="page-head">
+              <h1 class="display sm">Settings</h1>
+              <p class="muted">How the launcher starts RecFlare, and where it lives.</p>
+            </div>
+
+            <div class="panel">
+              <h2>RecFlare</h2>
+              <div class="row">
+                <div>
+                  <div class="row-title">Install folder</div>
+                  <div class="row-sub path" id="set-folder"></div>
+                </div>
+                <button class="btn outline" id="change-folder">
+                  <span data-icon="folder-open"></span>Change folder
+                </button>
+              </div>
+              <label class="row">
+                <div>
+                  <div class="row-title">Close the launcher when the game starts</div>
+                  <div class="row-sub">It opens again when you quit RecFlare.</div>
+                </div>
+                <input type="checkbox" class="switch" data-setting="closeOnPlay" />
+              </label>
+              <label class="row">
+                <div>
+                  <div class="row-title">Start in VR</div>
+                  <div class="row-sub">Play starts SteamVR. Play in VR stays available either way.</div>
+                </div>
+                <input type="checkbox" class="switch" data-setting="startInVr" />
+              </label>
+              <label class="row">
+                <div>
+                  <div class="row-title">Keep RecFlare up to date</div>
+                  <div class="row-sub">Patches install before the game starts.</div>
+                </div>
+                <input type="checkbox" class="switch" data-setting="autoUpdate" />
+              </label>
+            </div>
+
+            <div class="panel">
+              <h2>Diagnostics</h2>
+              <dl class="facts" id="facts"></dl>
+              <div class="btn-row">
+                <button class="btn outline" id="verify"><span data-icon="refresh-cw"></span>Verify files</button>
+                <button class="btn ghost danger" id="uninstall">
+                  <span data-icon="trash-2"></span>Uninstall RecFlare
+                </button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+    <script src="icons.js"></script>
+    <script src="demo.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
