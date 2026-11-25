@@ -45,6 +45,7 @@ Var NoIntegration
 Var Parameters
 Var ExplicitInstallDir
 Var PatchedUpgrade
+Var DirFallback
 
 !define MUI_PAGE_CUSTOMFUNCTION_SHOW CompactInstallShow
 !insertmacro MUI_PAGE_INSTFILES
@@ -235,6 +236,8 @@ FunctionEnd
 
 Section "Launcher"
   StrCpy $PatchedUpgrade 0
+  StrCpy $DirFallback 0
+recheck_dir:
   Push "$INSTDIR"
   Call NormalizePath
   Pop $INSTDIR
@@ -280,7 +283,14 @@ check_empty:
   StrCmp $0 "." next_entry
   StrCmp $0 ".." next_entry
   FindClose $1
-  Goto invalid_target
+  ; Non-empty, unrecognized folder. If it was auto-selected from a stale
+  ; registry InstallLocation (not chosen with /D=), fall back to the default
+  ; folder once so an old data-only folder does not block setup.
+  StrCmp $ExplicitInstallDir 1 invalid_target
+  StrCmp $DirFallback 1 invalid_target
+  StrCpy $DirFallback 1
+  StrCpy $INSTDIR "${DEFAULT_INSTALL_DIR}"
+  Goto recheck_dir
 next_entry:
   FindNext $1 $0
   Goto check_empty
