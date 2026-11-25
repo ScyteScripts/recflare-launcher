@@ -25,5 +25,19 @@ window.DEMO = {
       { id: 'p3', name: 'Obby Kit', edited: '5 days ago', path: 'D:\\RecFlareStudio\\ObbyKit' },
     ],
   },
+  myRooms: {
+    featured: [
+      { RoomId: 1, RoomName: 'RecCenter', ImageName: '' },
+      { RoomId: 2, RoomName: 'PaintballArena', ImageName: '' },
+      { RoomId: 3, RoomName: 'OrbitObby', ImageName: '' },
+    ],
+    favorites: [
+      { RoomId: 2, Name: 'PaintballArena', ImageName: '', Stats: { VisitCount: 22800, CheerCount: 640 } },
+      { RoomId: 4, Name: 'BucketBistro', ImageName: '', Stats: { VisitCount: 3100, CheerCount: 88 } },
+    ],
+    cheered: [
+      { RoomId: 3, Name: 'OrbitObby', ImageName: '', Stats: { VisitCount: 9400, CheerCount: 212 } },
+    ],
+  },
   settings: { closeOnPlay: true, startInVr: false, autoUpdate: true },
 };

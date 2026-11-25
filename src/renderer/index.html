@@ -32,10 +32,24 @@
               <span data-icon="settings"></span>Settings
             </button>
           </nav>
+          <button class="update-pill" id="launcher-update" hidden>
+            <span data-icon="download"></span><span id="launcher-update-text">Launcher update ready</span>
+          </button>
           <div class="dock-foot">
-            <button class="btn primary block" id="sign-in" hidden>
+            <button class="btn primary wide" id="sign-in" hidden>
               <span data-icon="log-in"></span>Sign in
             </button>
+            <div class="signin-wait" id="sign-in-wait" hidden>
+              <div class="signin-head"><span class="signin-spin"></span>Waiting for your browser</div>
+              <div class="signin-code" id="sign-in-code"></div>
+              <p class="signin-sub">Allow this code on the page that opened.</p>
+              <div class="signin-actions">
+                <button class="btn primary sm" id="sign-in-reopen">
+                  <span data-icon="external-link"></span>Open page
+                </button>
+                <button class="btn ghost sm" id="sign-in-cancel">Cancel</button>
+              </div>
+            </div>
             <div class="account" id="account">
               <span class="avatar" id="account-avatar"></span>
               <span class="account-text">
@@ -81,6 +95,12 @@
                   <button class="btn glass lg" id="play-vr">
                     <span data-icon="glasses"></span>Play in VR
                   </button>
+                  <button class="btn glass lg" data-open="https://www.recflare.net/">
+                    <span data-icon="globe"></span>Website
+                  </button>
+                  <button class="btn primary lg" id="game-update" hidden>
+                    <span data-icon="download"></span>Update
+                  </button>
                   <button class="btn primary lg" id="install" hidden>
                     <span data-icon="download"></span>Install
                   </button>
@@ -96,6 +116,22 @@
 
             <dl class="stats" id="stats"></dl>
 
+            <section class="block" id="featured-block" hidden>
+              <div class="block-head">
+                <h2>Featured</h2>
+                <div class="carousel-nav">
+                  <button class="btn ghost icon sm" id="featured-prev" aria-label="Previous">
+                    <span data-icon="chevron-left"></span>
+                  </button>
+                  <button class="btn ghost icon sm" id="featured-next" aria-label="Next">
+                    <span data-icon="chevron-right"></span>
+                  </button>
+                </div>
+              </div>
+              <div class="carousel" id="featured" aria-roledescription="carousel"></div>
+              <div class="carousel-dots" id="featured-dots"></div>
+            </section>
+
             <section class="block">
               <div class="block-head">
                 <h2>Hot right now</h2>
@@ -104,6 +140,16 @@
                 </button>
               </div>
               <ul class="rooms" id="rooms"></ul>
+            </section>
+
+            <section class="block" id="favorites-block" hidden>
+              <div class="block-head"><h2>Your favorites</h2></div>
+              <ul class="rooms" id="favorites"></ul>
+            </section>
+
+            <section class="block" id="cheered-block" hidden>
+              <div class="block-head"><h2>Rooms you cheered</h2></div>
+              <ul class="rooms" id="cheered"></ul>
             </section>
 
           </section>
@@ -130,7 +176,10 @@
                 <div class="strip-title" id="unity-title"></div>
                 <div class="strip-sub" id="unity-sub"></div>
               </div>
+              <div class="strip-actions" id="studio-status-actions"></div>
             </div>
+
+            <div class="panel studio-step" id="studio-step" hidden></div>
 
             <form class="panel new-project" id="new-project" hidden>
               <h2>New project</h2>
@@ -148,7 +197,7 @@
               </div>
             </form>
 
-            <section class="block">
+            <section class="block" id="projects-block">
               <div class="block-head"><h2>Projects</h2></div>
               <ul class="projects" id="projects"></ul>
               <p class="empty" id="projects-empty" hidden>
@@ -207,6 +256,38 @@
                 </button>
               </div>
             </div>
+
+            <div class="panel" id="migrate-panel">
+              <h2>Migrations</h2>
+              <div class="row">
+                <div>
+                  <div class="row-title">Old RecFlare launchers</div>
+                  <div class="row-sub">Look again for the original RecFlare installer, the old Studio launcher and Studio projects.</div>
+                </div>
+                <button class="btn outline" id="migrate-scan">
+                  <span data-icon="refresh-cw"></span>Scan again
+                </button>
+              </div>
+              <ul class="migrate-log" id="migrate-log"></ul>
+              <p class="row-sub" id="migrate-empty">Nothing has been moved over yet.</p>
+            </div>
+
+            <div class="panel">
+              <h2>About</h2>
+              <div class="row">
+                <div>
+                  <div class="row-title">RecFlare Launcher</div>
+                  <div class="row-sub" id="about-version"></div>
+                  <div class="row-sub" id="about-update" hidden></div>
+                </div>
+                <button class="btn outline" id="check-update" hidden>
+                  <span data-icon="refresh-cw"></span>Check for updates
+                </button>
+                <button class="btn outline" data-open="https://www.recflare.net/">
+                  <span data-icon="globe"></span>RecFlare website
+                </button>
+              </div>
+            </div>
           </section>
         </main>
       </div>
@@ -216,6 +297,7 @@
 
     <script src="icons.js"></script>
     <script src="demo.js"></script>
+    <script src="studio.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
