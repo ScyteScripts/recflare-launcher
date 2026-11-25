@@ -1,0 +1,10 @@
+{
+  "name": "troy-file-store-native-client",
+  "version": "0.0.57",
+  "private": true,
+  "main": "dist/$index.js",
+  "dependencies": {
+    "troy-json": "file:../troy-json@0.0.57",
+    "troy-foundation": "file:../troy-foundation@0.0.57"
+  }
+}

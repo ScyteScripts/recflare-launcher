@@ -1,0 +1,5 @@
+using PatchKit.Core.CSharp;
+
+namespace PatchKit.Apps;
+
+public delegate object SetAppLastUnfinishedWriteFileDataOperationInfoDelegate(App app, AppLastUnfinishedWriteFileDataOperationInfo? value, HandleExceptionDelegate<AppRootDirDoesNotExist> onAppRootDirDoesNotExist, HandleExceptionDelegate<UnauthorizedAccessToAppRootDir> onUnauthorizedAccessToAppRootDir);

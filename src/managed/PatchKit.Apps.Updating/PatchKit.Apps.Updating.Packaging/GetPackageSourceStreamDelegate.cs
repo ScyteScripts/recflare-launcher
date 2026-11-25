@@ -1,0 +1,3 @@
+namespace PatchKit.Apps.Updating.Packaging;
+
+public delegate IPackageSourceStreamDisposable GetPackageSourceStreamDelegate(PackageSourceStreamRequest request);

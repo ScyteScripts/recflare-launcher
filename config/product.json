@@ -1,0 +1,7 @@
+{
+  "buildLabel": "Test Build 3",
+  "webOrigin": "https://recflare.net",
+  "serverOrigin": "https://ns.recflare.net",
+  "studioCdnOrigin": "https://studio.recflare.net",
+  "distributionOrigin": "https://studio.recflare.net"
+}

@@ -1,0 +1,5 @@
+using PatchKit.Core.CSharp;
+
+namespace PatchKit.Apps;
+
+public delegate object CreateAppRootDirDelegate(App app, bool isOverwritingOtherAppRootDirAllowed, bool isAppNotEmptyRootDirAllowed, HandleExceptionDelegate<UnauthorizedAccessToAppRootDir> onUnauthorizedAccessToAppRootDir, HandleExceptionDelegate<FileIsConflictingWithAppRootDir> onFileIsConflictingWithAppRootDir, HandleExceptionDelegate<OtherAppRootDirIsConflictingWithAppRootDir> onOtherAppRootDirIsConflictingWithAppRootDir, HandleExceptionDelegate<AppRootDirIsNotEmpty> onAppRootDirIsNotEmpty);

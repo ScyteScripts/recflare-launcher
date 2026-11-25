@@ -1,0 +1,23 @@
+{
+  "templateFiles": [
+    {
+      "path": "RecRoomStudioPackages/com.recroom.studio.build-0.0.1.tgz",
+      "sha256": "b1e441f1b45e8ad9b20112f8052ef7e06762bd55f61d0a5b7111c3efa405d8ef"
+    },
+    {
+      "path": "RecRoomStudioPackages/com.recroom.studio-0.0.1.tgz",
+      "sha256": "5e1664db51fead0e1ec434a3f808615c9d58230a4acf18279df73c64c5e7e3d0"
+    },
+    {
+      "path": "RecRoomStudioPackages/com.unity.collections-2.1.4.tgz",
+      "sha256": "970a2028436e49f9f636314434b160fc778923b4c4496bbede1c0440e4cf5837"
+    },
+    {
+      "path": "ProjectSettings/RecRoomStudioPatch.ini",
+      "sha256": "7a34224154725ddaa3a96fa6c781f0e2273b0810b5579b076f70bafd33c0d2fd"
+    }
+  ],
+  "installedAppSecretSha256": "f31e174f7cd5991d0e45db176e6283bfe04a74d91a95929c465e2edace7770e6",
+  "templateVersion": 169,
+  "distributionVersion": 171
+}

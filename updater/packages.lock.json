@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "Autofac": {
+        "type": "Direct",
+        "requested": "[4.9.4, )",
+        "resolved": "4.9.4",
+        "contentHash": "dYiDG4yoV7GDCoOc66d1sqMmg2gwDyomHKgATuMfhFzYxVpWEltToHVHXI3I9vOEvIXE55S4OZPY0ldiZmZtpA=="
+      },
+      "Newtonsoft.Json": {
+        "type": "Direct",
+        "requested": "[13.0.4, )",
+        "resolved": "13.0.4",
+        "contentHash": "pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A=="
+      },
+      "Sentry": {
+        "type": "Direct",
+        "requested": "[1.1.2, )",
+        "resolved": "1.1.2",
+        "contentHash": "LWPQ9F7gFLyttSZh9h/Kd77zlwVCcq2j/hWVmqZRoZKRMvTbWXcPbEfN0Im+nuJW88z2XOzQdhwDD1qJGHlJUA==",
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2",
+          "Sentry.PlatformAbstractions": "1.0.0",
+          "Sentry.Protocol": "1.0.3"
+        }
+      },
+      "SharpCompress": {
+        "type": "Direct",
+        "requested": "[0.50.7, )",
+        "resolved": "0.50.7",
+        "contentHash": "amxjOlPKUFb33ohAVahPCCBHLtToYOOb6JGyM40q8DnT6KYoBLW1TtW6uLEXbv40S7ej6ikf6VmAXGBaFL6Klg=="
+      },
+      "SharpZipLib": {
+        "type": "Direct",
+        "requested": "[1.4.2, )",
+        "resolved": "1.4.2",
+        "contentHash": "yjj+3zgz8zgXpiiC3ZdF/iyTBbz2fFvMxZFEBPUcwZjIvXOf37Ylm+K58hqMfIBt5JgU/Z2uoUS67JmTLe973A=="
+      },
+      "Standart.Hash.xxHash": {
+        "type": "Direct",
+        "requested": "[1.0.6, )",
+        "resolved": "1.0.6",
+        "contentHash": "RgGNasXBHbJcCydjYktiPiOJ68uHhk6dZtMhGg1U4N/oTKU2uBSUWxf5xuuKKbwwjrj02/smQlGCV2X9jprGQg=="
+      },
+      "Sentry.PlatformAbstractions": {
+        "type": "Transitive",
+        "resolved": "1.0.0",
+        "contentHash": "NgcYNgZfIQNcMSFZTmgOria9/cqgKrV3ICNoC7iS/mmBZojLbdQMnnD7Tg5lfCKH1myk3AjU91VGDct88uw1Ow=="
+      },
+      "Sentry.Protocol": {
+        "type": "Transitive",
+        "resolved": "1.0.3",
+        "contentHash": "SvPtwBs6mrJ+p6oEUo4pedM+5jWawy7T90/r2p5KgRXiQKDcaiX8pRy0XJZoV+WPjbAKc0pHpJUVSFeaxE+ogQ=="
+      }
+    },
+    "net10.0/win-x64": {}
+  }
+}

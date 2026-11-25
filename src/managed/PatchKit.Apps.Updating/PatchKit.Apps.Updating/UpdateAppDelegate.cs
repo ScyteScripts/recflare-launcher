@@ -1,0 +1,7 @@
+using System.Threading;
+using PatchKit.Apps.Remote;
+using PatchKit.Core.CSharp;
+
+namespace PatchKit.Apps.Updating;
+
+public delegate object UpdateAppDelegate(App app, AppRemote appRemote, AppLicenseKey? appLicenseKey, AppPassword? appPassword, AppValidationMode appValidationMode, ReportProgressDelegate<UpdateAppProgress> reportProgress, CancellationToken cancellationToken, HandleExceptionDelegate<AppRootDirDoesNotExist> onAppRootDirDoesNotExist, HandleExceptionDelegate<UnauthorizedAccessToAppRootDir> onUnauthorizedAccessToAppRootDir, HandleExceptionDelegate<InvalidAppAuthKey> onInvalidAppAuthKey, HandleExceptionDelegate<ExpiredAppAuthKey> onExpiredAppAuthKey, HandleExceptionDelegate<AppLicenseKeyRequired> onAppLicenseKeyRequired, HandleExceptionDelegate<InvalidAppLicenseKey> onInvalidAppLicenseKey, HandleExceptionDelegate<BlockedAppLicenseKey> onBlockedAppLicenseKey, HandleExceptionDelegate<InvalidAppPassword> onInvalidAppPassword, HandleExceptionDelegate<AppRemoteNotFound> onAppRemoteNotFound, HandleExceptionDelegate<AppRemoteVersionNotFound> onAppRemoteVersionNotFound, HandleExceptionDelegate<OutOfAppRootDirFreeSpace> onOutOfAppRootDirFreeSpace);

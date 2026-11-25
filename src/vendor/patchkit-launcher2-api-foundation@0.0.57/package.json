@@ -1,0 +1,11 @@
+{
+  "name": "patchkit-launcher2-api-foundation",
+  "version": "0.0.57",
+  "private": true,
+  "main": "dist/$index.js",
+  "dependencies": {
+    "troy-foundation": "file:../troy-foundation@0.0.57",
+    "troy-native-foundation": "file:../troy-native-foundation@0.0.57",
+    "troy-patchkit-api-foundation": "file:../troy-patchkit-api-foundation@0.0.57"
+  }
+}

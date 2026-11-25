@@ -1,0 +1,5 @@
+using PatchKit.Core.CSharp;
+
+namespace PatchKit.Apps;
+
+public delegate AppVersionId? GetAppLastInstalledVersionIdDelegate(App app, HandleExceptionAndReturnDelegate<AppRootDirDoesNotExist> onAppRootDirDoesNotExist, HandleExceptionAndReturnDelegate<UnauthorizedAccessToAppRootDir> onUnauthorizedAccessToAppRootDir);

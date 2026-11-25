@@ -1,0 +1,7 @@
+using System.Threading;
+using PatchKit.Apps.Remote;
+using PatchKit.Core.CSharp;
+
+namespace PatchKit.Apps.Updating.Strategy;
+
+public delegate bool IsFileUpdatePatchesStrategyPossibleDelegate(AppRemote appRemote, AppVersionId targetVersionId, AppLicenseSecret? licenseSecret, AppPassword? password, UpdateFileState state, CancellationToken cancellationToken, HandleExceptionAndReturnDelegate<AppRemoteNotFound> onAppRemoteNotFound, HandleExceptionAndReturnDelegate<AppRemoteVersionNotFound> onAppRemoteVersionNotFound, HandleExceptionAndReturnDelegate<AppRemoteVersionPatchLinkNotFound> onAppRemoteVersionPatchLinkNotFound, HandleExceptionAndReturnDelegate<InvalidAppPassword> onInvalidAppPassword, HandleExceptionAndReturnDelegate<InvalidAppAuthKey> onInvalidAppAuthKey, HandleExceptionAndReturnDelegate<ExpiredAppAuthKey> onExpiredAppAuthKey);

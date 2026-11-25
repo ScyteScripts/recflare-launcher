@@ -1,0 +1,7 @@
+using System.Threading;
+using PatchKit.Core.CSharp;
+using PatchKit.Core.IO;
+
+namespace PatchKit.Apps.Updating.Packaging;
+
+public delegate IPack1FileSourceStreamDisposable GetPack1FileSourceStreamDelegate(IPackageStream packageStream, BytesCount startPos, BytesCount length, CancellationToken cancellationToken, HandleExceptionAndReturnDelegate<PackageFileSourceStreamOutOfRange> onPackageFileSourceStreamOutOfRange, HandleExceptionAndReturnDelegate<InvalidAppAuthKey> onInvalidAppAuthKey, HandleExceptionAndReturnDelegate<ExpiredAppAuthKey> onExpiredAppAuthKey);

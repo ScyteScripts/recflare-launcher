@@ -1,0 +1,6 @@
+using PatchKit.Core.CSharp;
+using PatchKit.Core.IO;
+
+namespace PatchKit.Apps.Remote;
+
+public delegate ImmutableArray<AppRemotePack1FileUnpackInfo> GetFilteredNewAppRemotePack1FilesUnpackInfoDelegate(ImmutableArray<FilteredAppRemotePack1FileUnpackInfo> filteredFilesUnpackInfo, ImmutableArray<FilteredAppRemotePackageChunksRange> filteredChunksRanges, BytesCount chunkSize);

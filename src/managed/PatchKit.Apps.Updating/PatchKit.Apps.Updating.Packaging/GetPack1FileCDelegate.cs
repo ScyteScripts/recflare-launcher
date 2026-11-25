@@ -1,0 +1,7 @@
+using System.Threading;
+using PatchKit.Apps.Remote;
+using PatchKit.Core.CSharp;
+
+namespace PatchKit.Apps.Updating.Packaging;
+
+public delegate IPackageFileDisposable GetPack1FileCDelegate(AppRemotePackageFileInfo info, IPackageStream packageStream, AppRemotePack1FileUnpackInfo unpackInfo, AppRemotePack1Encryption encryption, AppRemotePack1CompressionMethod compressionMethod, AppRemotePack1UnpackPassword password, CancellationToken cancellationToken, HandleExceptionAndReturnDelegate<PackageFileSourceStreamOutOfRange> onPackageFileSourceStreamOutOfRange, HandleExceptionAndReturnDelegate<InvalidAppAuthKey> onInvalidAppAuthKey, HandleExceptionAndReturnDelegate<ExpiredAppAuthKey> onExpiredAppAuthKey);

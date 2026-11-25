@@ -1,0 +1,6 @@
+using PatchKit.Core.CSharp;
+using PatchKit.Core.IO;
+
+namespace PatchKit.Apps;
+
+public delegate object MoveAppDelegate(App app, Path appNewRootDirPath, HandleExceptionDelegate<AppNewRootDirIsNotEmpty> onAppNewRootDirIsNotEmpty, HandleExceptionDelegate<UnauthorizedAccessToAppRootDir> onUnauthorizedAccessToAppRootDir, HandleExceptionDelegate<UnauthorizedAccessToAppNewRootDir> onUnauthorizedAccessToAppNewRootDir, HandleExceptionDelegate<FileIsConflictingWithAppNewRootDir> onFileIsConflictingWithAppNewRootDir, HandleExceptionDelegate<OutOfAppNewRootDirFreeSpace> onOutOfAppNewRootDirFreeSpace);

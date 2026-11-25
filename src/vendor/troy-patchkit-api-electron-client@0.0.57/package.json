@@ -1,0 +1,13 @@
+{
+  "name": "troy-patchkit-api-electron-client",
+  "version": "0.0.57",
+  "private": true,
+  "main": "dist/$index.js",
+  "dependencies": {
+    "uuid": "^9.0.0",
+    "troy-patchkit-api-client": "file:../troy-patchkit-api-client@0.0.57",
+    "troy-foundation": "file:../troy-foundation@0.0.57",
+    "troy-native-foundation": "file:../troy-native-foundation@0.0.57",
+    "troy-operating-system-native-client": "file:../troy-operating-system-native-client@0.0.57"
+  }
+}

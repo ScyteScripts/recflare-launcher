@@ -1,0 +1,8 @@
+using System.Threading;
+using PatchKit.Apps.Remote;
+using PatchKit.Core.CSharp;
+using PatchKit.Core.IO;
+
+namespace PatchKit.Apps.Updating.Strategy;
+
+public delegate ImmutableArray<FileUpdateStrategy> GetFilesUpdateStrategyDelegate(UpdateAppContext context, AppValidationMode validationMode, CancellationToken cancellationToken, HandleExceptionAndReturnDelegate<UnauthorizedAccess> onUnauthorizedAccess, HandleExceptionAndReturnDelegate<AppRemoteNotFound> onAppRemoteNotFound, HandleExceptionAndReturnDelegate<AppRemoteVersionNotFound> onAppRemoteVersionNotFound, HandleExceptionAndReturnDelegate<InvalidAppPassword> onInvalidAppPassword, HandleExceptionAndReturnDelegate<InvalidAppAuthKey> onInvalidAppAuthKey, HandleExceptionAndReturnDelegate<ExpiredAppAuthKey> onExpiredAppAuthKey);

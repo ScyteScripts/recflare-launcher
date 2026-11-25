@@ -1,0 +1,6 @@
+using System.Threading;
+using PatchKit.Core.CSharp;
+
+namespace PatchKit.Apps.Remote;
+
+public delegate AppRemotePackageInfo GetFilteredNewAppRemoteContentInfoDelegate(AppRemote appRemote, AppVersionId versionId, AppLicenseSecret? licenseSecret, AppPassword? password, ImmutableArray<AppPath> dataFiles, CancellationToken cancellationToken, HandleExceptionAndReturnDelegate<AppRemoteVersionNotFound> onAppRemoteVersionNotFound, HandleExceptionAndReturnDelegate<InvalidAppPassword> onInvalidAppPassword, HandleExceptionAndReturnDelegate<InvalidAppAuthKey> onInvalidAppAuthKey, HandleExceptionAndReturnDelegate<ExpiredAppAuthKey> onExpiredAppAuthKey);

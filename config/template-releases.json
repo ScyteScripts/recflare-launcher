@@ -1,0 +1,26 @@
+{
+  "releases": [
+    {
+      "version": 171,
+      "sourceOrigin": "https://studio.recflare.net",
+      "files": [
+        {
+          "path": "RecRoomStudioPackages/com.recroom.studio.build-0.0.1.tgz",
+          "sha256": "eff2ad52155f883a4a9ec0cf60d9894157201eb3217976fc1ed47abc75937dd8"
+        },
+        {
+          "path": "RecRoomStudioPackages/com.recroom.studio-0.0.1.tgz",
+          "sha256": "6f665bb36b5485848f96132516877791ce00d8ed6bde21b36cc762b1b5f0b380"
+        },
+        {
+          "path": "RecRoomStudioPackages/com.unity.collections-2.1.4.tgz",
+          "sha256": "970a2028436e49f9f636314434b160fc778923b4c4496bbede1c0440e4cf5837"
+        },
+        {
+          "path": "ProjectSettings/RecRoomStudioPatch.ini",
+          "sha256": "875ece03ba0a0400ef2efa157b491b1c0a0329c8b4494da90eb9852373803d59"
+        }
+      ]
+    }
+  ]
+}

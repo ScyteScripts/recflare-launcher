@@ -1,0 +1,7 @@
+{
+  "name": "troy-foundation",
+  "version": "0.0.57",
+  "private": true,
+  "main": "dist/$index.js",
+  "dependencies": {}
+}

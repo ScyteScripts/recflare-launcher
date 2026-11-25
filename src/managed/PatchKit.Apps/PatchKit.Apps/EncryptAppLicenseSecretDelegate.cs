@@ -1,0 +1,3 @@
+namespace PatchKit.Apps;
+
+public delegate AppEncryptedLicenseSecret EncryptAppLicenseSecretDelegate(AppLicenseSecret licenseSecret, AppLicenseKey licenseKey);

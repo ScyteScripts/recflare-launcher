@@ -1,0 +1,72 @@
+{
+  "files": [
+    {
+      "path": "assets/launcher/unityHubRegKeyCleanup",
+      "sha256": "bb1d77fe134ec5e248b33af556d508d67229c4b988ff10282c94d14024c6234c"
+    },
+    {
+      "path": "assets/recflare-icon.png",
+      "sha256": "71f143e9e8a1162b375bfca75092b50a5a3099e05b0c17d2a84a1353aff619a0"
+    },
+    {
+      "path": "assets/recflare-studio-logo.png",
+      "sha256": "6b338ec01f285e94ac79da21c5ceb76b99d39f1e68bd435298cafa24dadd3641"
+    },
+    {
+      "path": "assets/theme/backgroundPattern-230a45c1.png",
+      "sha256": "230a45c150b8f18992c673687064a7dea2be37d48589d13a9a44d06105c72125"
+    },
+    {
+      "path": "assets/theme/close_window_icon-76ad83c4.svg",
+      "sha256": "76ad83c4ec2c53f0f0d06ef26d6624d94d5b979b292e058c33bf71c4284dcfca"
+    },
+    {
+      "path": "assets/theme/link-d2f58bea.svg",
+      "sha256": "d2f58beabc0dafa204de47f13af450dad71b83f3e8592aff2c951f17177cb77c"
+    },
+    {
+      "path": "assets/theme/loading_spinner_icon-435e3bde.svg",
+      "sha256": "435e3bdeabee73a7242c5d63acdd07d5760e0f1a884b90633fa50fd70289f2b0"
+    },
+    {
+      "path": "assets/theme/logo-225242f7.png",
+      "sha256": "225242f727b7bc36e0a58d072f8ce550bd2a324f18dd094bbb39db01b0626222"
+    },
+    {
+      "path": "assets/theme/minimize_window_icon-0dd590db.svg",
+      "sha256": "0dd590db7771c79e24a23c8160865d4620dc76085ee31f8827038e7660ddd64a"
+    },
+    {
+      "path": "assets/theme/studio_background_dark-735d9f88.png",
+      "sha256": "735d9f880496629a66349c3b2dd357d69fb565bb156b3a1f86ef3dd34c1e04dc"
+    },
+    {
+      "path": "assets/theme/studio_background_pattern-85478a8f.png",
+      "sha256": "85478a8f6162b862f5f908b81a6f3a1ea4ed2693e0a939dea3d5f628a295a796"
+    },
+    {
+      "path": "assets/theme/studio_download_icon-e6047894.svg",
+      "sha256": "e604789434b9ec0dae50a9ea3ce6ccfa735974df0e7314284b0a4df2f0f3a514"
+    },
+    {
+      "path": "assets/theme/studio_folder_add_icon-f879a380.svg",
+      "sha256": "f879a38027c6e8882812d1b5aceff6618841efe3fb0040b0ea71126abd3e4448"
+    },
+    {
+      "path": "assets/theme/studio_logo-1ee184d9.png",
+      "sha256": "1ee184d921f81dda99abfd837d3fd14dbef18619f97e037e0288404cbf1b84d8"
+    },
+    {
+      "path": "assets/theme/studio_logo_text_centered-557eceeb.png",
+      "sha256": "557eceeb0e3bd885c9bf8f121326648d91341f9c05b8b4e3f48cb8905b71cf5a"
+    },
+    {
+      "path": "assets/theme/studio_search_icon-d245525c.svg",
+      "sha256": "d245525c06ad2b6e39cc50e7608211d64b61f02da271c4f1c676943abf97007c"
+    },
+    {
+      "path": "assets/theme/studio_warning_icon-f190b819.svg",
+      "sha256": "f190b819928f4c3a617ab6e2047b18b5a932a770a18b3c407885a6d0d7c377ae"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+; RecFlare Studio template 169 / hosted v171, Unity 6000.0.27f1.
+; Copy beside Launch.cmd as services.ini and configure your operator.
+; RECROOM_STUDIO_PATCH_CONFIG selects an explicit private profile.
+; Blank operator settings use the product defaults.
+[Launcher]
+UseInstalledTemplate=
+
+[Network]
+ServerUrl=
+StudioCdnUrl=
+WebUrl=
+PatchKitApiUrl=
+PatchKitCacheUrl=
+PatchKitKeysUrl=
+PatchKitAppSecretSha256=
+
+[Services]
+Auth=
+API=
+Studio=
+StudioCDN=
+WWW=
+Images=
+CDN=

@@ -1,0 +1,5 @@
+using PatchKit.Apps.Remote;
+
+namespace PatchKit.Apps.Updating.Packaging;
+
+public delegate IPackageFileDisposable GetPack1FileBDelegate(AppRemotePackageFileInfo info, IPack1FileSourceStream sourceStream, AppRemotePack1Encryption encryption, AppRemotePack1CompressionMethod compressionMethod, AppRemotePack1UnpackPassword password);

@@ -1,0 +1,7 @@
+using PatchKit.Apps.Serialization;
+using PatchKit.Core.CSharp;
+using PatchKit.Core.IO;
+
+namespace PatchKit.Apps;
+
+public delegate AppMetaData? ReadAppMetaDataFromFileDelegate(Path path, HandleExceptionAndReturnDelegate<UnauthorizedAccess> onUnauthorizedAccess, HandleExceptionAndReturnDelegate<NotExistingFile> onNotExistingFile, HandleExceptionAndReturnDelegate<MetaDataDeserializeFailure> onMetaDataDeserializeFailure, HandleExceptionAndReturnDelegate<UnsupportedMetaDataFormatVersion> onUnsupportedMetaDataFormatVersion);
