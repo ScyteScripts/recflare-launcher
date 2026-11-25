@@ -1,7 +1,26 @@
 'use strict';
-const { app, BrowserWindow, ipcMain, shell, safeStorage } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, safeStorage, nativeImage } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
+
+function launcherIcon() {
+  const roots = [process.resourcesPath, path.join(__dirname, '..', '..', 'resources')].filter(Boolean);
+  for (const dir of roots)
+    for (const name of ['launcher.ico', path.join('assets', 'icon')]) {
+      const file = path.join(dir, name);
+      try {
+        if (fs.existsSync(file)) {
+          const img = nativeImage.createFromPath(file);
+          if (!img.isEmpty()) return img;
+        }
+      } catch {}
+    }
+  return null;
+}
+const APP_ICON = launcherIcon();
+app.on('browser-window-created', (_event, win) => {
+  if (APP_ICON) try { win.setIcon(APP_ICON); } catch {}
+});
 
 function handle(name, fn) {
   ipcMain.handle(`RecFlareLauncher.${name}`, async (event, args) => {

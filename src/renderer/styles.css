@@ -456,7 +456,7 @@ body[data-view='play'] .window-controls {
 .photo-credit {
   position: absolute;
   right: 1.5rem;
-  bottom: 1.25rem;
+  top: 1.25rem;
   font-size: 0.75rem;
   color: rgb(255 255 255 / 75%);
 }
@@ -955,7 +955,8 @@ body[data-view='play'] .stats {
 }
 .hero-play .photo-credit {
   right: 0;
-  bottom: 1rem;
+  top: 1.25rem;
+  bottom: auto;
 }
 .hero-play + .stats {
   padding: 1.4rem 1rem;

@@ -150,7 +150,7 @@ function writePatchIni(dir) {
 
 async function installPatch(dir) {
   const version = await latestPatch();
-  const zip = path.join(app.getPath('temp'), `RecFlare-2026Patch-${version}.zip`);
+  const zip = path.join(dir, `RecFlare-2026Patch-${version}.zip`);
   await download(
     `https://github.com/${PATCH_REPO}/releases/download/${version}/2026Patch-${version}-x64.zip`,
     zip,
@@ -162,7 +162,7 @@ async function installPatch(dir) {
     await extract(zip, dir);
   } catch (error) {
     const text = `${error?.message ?? ''} ${error?.stderr ?? ''}`;
-    if (error?.blocked || /virus|potentially unwanted|ENOENT|EPERM|EACCES|Operation did not complete/i.test(text))
+    if (error?.blocked || /virus|potentially unwanted|ENOENT|EPERM|EACCES|Operation did not complete|Error opening archive|Failed to open|Cannot open|cannot be opened|Truncated/i.test(text))
       throw Object.assign(
         new Error(
           'Windows Security blocked the RecFlare patch, so it was not updated. Windows flags the patch\'s Injector.exe. ' +
@@ -250,10 +250,35 @@ async function status() {
   };
 }
 
+const av = require('./av.cjs');
+function avFolder() {
+  const s = readSettings();
+  return s.folder && isInstall(s.folder) ? s.folder : s.folder || defaultDir();
+}
+
 function register(handle) {
   handle('gameStatus', () => status());
   handle('gameOldInstall', () => oldInstall());
   handle('gameDefaultFolder', () => defaultDir());
+
+  handle('avStatus', async () => {
+    const folder = avFolder();
+    const remembered = (readSettings().avExcluded ?? []).some(
+      (x) => folder.toLowerCase() === x || folder.toLowerCase().startsWith(x.replace(/\\+$/, '') + '\\'),
+    );
+    const live = remembered ? true : await av.isExcluded(folder);
+    return { folder, excluded: remembered || live === true };
+  });
+  handle('avAddExclusion', async () => {
+    const folder = avFolder();
+    const ok = await av.addExclusion(folder);
+    if (ok) {
+      const list = new Set((readSettings().avExcluded ?? []).map((x) => x.toLowerCase()));
+      list.add(folder.toLowerCase());
+      writeSettings({ avExcluded: [...list] });
+    }
+    return ok;
+  });
 
   handle('gameAdopt', (_e, dir) => {
     const folder = path.resolve(String(dir ?? ''));
@@ -304,11 +329,25 @@ function register(handle) {
     const bat = vr ? 'RecRoomVR.bat' : 'RecRoomScreen.bat';
     const child = spawn(path.join(SYSTEM, 'System32', 'cmd.exe'), ['/d', '/c', bat], {
       cwd: folder,
-      detached: true,
       windowsHide: true,
-      stdio: 'ignore',
+      stdio: ['ignore', 'pipe', 'pipe'],
     });
-    child.unref();
+    let log = '';
+    const grab = (d) => (log = (log + d.toString()).slice(-4000));
+    child.stdout.on('data', grab);
+    child.stderr.on('data', grab);
+    child.on('error', (error) =>
+      send({ running: false, error: `The game could not start: ${error.message}` }),
+    );
+    child.on('close', (code) => {
+      if (!code) return;
+      const line = log
+        .split(/\r?\n/)
+        .map((l) => l.trim())
+        .filter(Boolean)
+        .at(-1);
+      send({ running: false, error: line || `The game failed to start (exit code ${code}).` });
+    });
   });
 
   handle('gameCancel', () => {

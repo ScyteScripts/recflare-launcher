@@ -16,7 +16,7 @@ const ICONS = [
   'gamepad-2', 'box', 'settings', 'log-in', 'log-out', 'minus', 'square', 'x', 'monitor', 'glasses',
   'download', 'folder-open', 'folder-plus', 'plus', 'external-link', 'users', 'trending-up',
   'activity', 'git-fork', 'flame', 'footprints', 'heart', 'upload', 'play', 'check', 'refresh-cw',
-  'hard-drive', 'info', 'globe', 'chevron-left', 'chevron-right', 'star', 'wrench', 'x', 'door-open', 'shirt', 'calendar-days', 'trash-2', 'circle-alert',
+  'hard-drive', 'info', 'globe', 'shield', 'chevron-left', 'chevron-right', 'star', 'wrench', 'x', 'door-open', 'shirt', 'calendar-days', 'trash-2', 'circle-alert',
 ];
 const icons = {};
 for (const name of ICONS) {

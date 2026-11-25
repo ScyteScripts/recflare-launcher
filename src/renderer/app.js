@@ -495,8 +495,9 @@
   function showBlocked() {
     if (blockedOpen) return;
     blockedOpen = true;
-    const open = el('button', 'btn primary', icon('external-link'), 'Open Windows Security');
-    const retry = el('button', 'btn outline', icon('refresh-cw'), 'Try again');
+    const exclude = el('button', 'btn primary', icon('shield'), 'Add exclusion and try again');
+    const open = el('button', 'btn outline', icon('external-link'), 'Open Windows Security');
+    const retry = el('button', 'btn ghost', 'Try again');
     const close = el('button', 'btn ghost', 'Close');
     const m = modal(
       'Windows Security blocked the RecFlare patch',
@@ -504,14 +505,28 @@
       el(
         'p',
         'muted',
-        'To use it anyway, open Windows Security, find the RecFlare patch under Protection history, and choose Allow on device. Then click Try again. Only do this if you trust the RecFlare patch.',
+        'Add a Windows Security exclusion for the RecFlare folder, then the patch can install. Windows asks you to confirm. ' +
+          'Or open Windows Security yourself and choose Allow on device. Only do this if you trust the RecFlare patch.',
       ),
-      el('div', 'btn-row', open, retry, close),
+      el('div', 'btn-row', exclude, open, retry, close),
     );
     const done = () => {
       blockedOpen = false;
       m.close();
     };
+    exclude.addEventListener('click', async () => {
+      exclude.disabled = true;
+      const ok = await call('RecFlareLauncher.avAddExclusion').catch(() => false);
+      if (ok) {
+        done();
+        toast('Exclusion added. Updating RecFlare…', 'shield');
+        await refreshAv();
+        void updatePatch();
+      } else {
+        exclude.disabled = false;
+        toast('The exclusion was not added.', 'circle-alert');
+      }
+    });
     open.addEventListener('click', () => call('RecFlareLauncher.openWindowsSecurity').catch(() => {}));
     retry.addEventListener('click', () => {
       done();
@@ -519,6 +534,31 @@
     });
     close.addEventListener('click', done);
   }
+
+  async function refreshAv() {
+    if (!bridge) return;
+    let info;
+    try {
+      info = await call('RecFlareLauncher.avStatus');
+    } catch {
+      return;
+    }
+    $('av-row').hidden = false;
+    const added = info.excluded === true;
+    $('av-sub').textContent = added
+      ? `The RecFlare folder (${info.folder}) is excluded from Windows Security.`
+      : "Add a Windows Security exclusion for the RecFlare folder so the patch isn't blocked. Needs your OK in the Windows prompt.";
+    const btn = $('av-add');
+    btn.disabled = added;
+    btn.replaceChildren(icon('shield'), added ? 'Added' : 'Add exclusion');
+  }
+  if (bridge)
+    $('av-add').addEventListener('click', async () => {
+      $('av-add').disabled = true;
+      const ok = await call('RecFlareLauncher.avAddExclusion').catch(() => false);
+      toast(ok ? 'Exclusion added.' : 'The exclusion was not added.', ok ? 'shield' : 'circle-alert');
+      await refreshAv();
+    });
 
   async function realPlay(vr) {
     try {
@@ -889,6 +929,7 @@
   void refreshGame();
   setTimeout(() => void offerMigration(), 1500);
   if (bridge) void launcherUpdates();
+  if (bridge) void refreshAv();
 
   let lastFocusCheck = Date.now();
   function onLauncherFocus() {

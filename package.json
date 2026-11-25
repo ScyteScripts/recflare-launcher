@@ -144,6 +144,7 @@
     "extract-zip": "2.0.1",
     "lucide-static": "1.8.0",
     "prettier": "3.6.2",
+    "rcedit": "5.0.2",
     "typescript": "5.9.3"
   },
   "overrides": {

@@ -53,9 +53,21 @@ export async function pack() {
   const launcherIcon=icons.createICO(iconSource,icons.BICUBIC2,0,false,true);
   if(!launcherIcon)throw new Error('Could not build the Studio shortcut icon');
   fs.writeFileSync(path.join(dest,'resources/launcher.ico'),launcherIcon);
+  const { rcedit }=createRequire(import.meta.url)('rcedit');
+  const appVersion=JSON.parse(fs.readFileSync(path.join(root,'package.json'))).version;
+  await rcedit(path.join(dest,'RecFlare Launcher.exe'),{
+    icon:path.join(dest,'resources/launcher.ico'),
+    'file-version':appVersion,
+    'product-version':appVersion,
+    'version-string':{
+      ProductName:'RecFlare Launcher',
+      FileDescription:'RecFlare Launcher',
+      CompanyName:'RecFlare',
+      OriginalFilename:'RecFlare Launcher.exe',
+    },
+  });
   const updaterDest=path.join(dest,'resources/updater');
   fs.cpSync(path.join(root,'build/updater'),updaterDest,{recursive:true,filter:file=>!isDebugArtifact(file)});
-  // Incremental packaging must also remove symbols left by an earlier build.
   removeStaleDebugFiles(updaterDest);
   createAsar(appOut, path.join(dest, 'resources/app.asar'),{exclude:isDebugArtifact});
   fs.copyFileSync(path.join(root, 'config/services.ini.example'), path.join(dest, 'services.ini.example'));

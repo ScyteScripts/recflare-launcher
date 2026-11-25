@@ -23,7 +23,11 @@ test('portable package uses verified selectable Electron and rebuilt updater wit
  const config=JSON.parse(fs.readFileSync(path.join(root,'config/runtime.json')));
  const runtime=path.join(root,'build/runtimes',config.version+'-win32-x64');
  const baseline=JSON.parse(fs.readFileSync(path.join(runtime,'runtime-manifest.json')));
- for(const f of baseline.files){if(f.path==='resources/default_app.asar')continue;const rel=f.path==='electron.exe'?'RecFlare Launcher.exe':f.path;assert.equal(sha(fs.readFileSync(path.join(dir,rel))),f.sha256,rel);}
+ for(const f of baseline.files){
+  if(f.path==='resources/default_app.asar')continue;
+  if(f.path==='electron.exe'){const exe=fs.readFileSync(path.join(dir,'RecFlare Launcher.exe'));assert.equal(exe.subarray(0,2).toString(),'MZ','rebranded exe must be a valid Windows executable');assert.notEqual(sha(exe),f.sha256,'exe should carry the RecFlare icon and version, not the stock Electron ones');continue;}
+  assert.equal(sha(fs.readFileSync(path.join(dir,f.path))),f.sha256,f.path);
+ }
  assert.equal(fs.existsSync(path.join(dir,'resources/libpkapps')),false);
  assert.equal(fs.existsSync(path.join(dir,'resources/updater/RecFlare.Updater.exe')),true);
  const manifest=JSON.parse(fs.readFileSync(path.join(dir,'build-manifest.json')));
