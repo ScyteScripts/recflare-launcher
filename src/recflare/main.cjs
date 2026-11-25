@@ -285,14 +285,23 @@ function oldStudioTemplate(dir) {
 }
 
 async function oldStudioProjects() {
-  const found = new Set();
-  for (const dir of discovery.hubProjects()) if (await discovery.isStudioProject(dir).catch(() => false)) found.add(dir);
-  const scan = discovery
-    .discoverProjects([os.homedir()], { maxDirectories: 40000, onWarning: () => {} })
-    .catch(() => []);
-  const timeout = new Promise((resolve) => setTimeout(() => resolve([]), 20000));
-  for (const dir of await Promise.race([scan, timeout])) found.add(dir);
-  return [...found].sort();
+  const candidates = new Set(discovery.hubProjects());
+  try {
+    for (const dir of await require('../platform/routing-repair.cjs').windowsProjects('Rec Room Studio Launcher'))
+      candidates.add(dir);
+  } catch {
+  }
+  try {
+    const recent = JSON.parse(
+      fs.readFileSync(path.join(app.getPath('appData'), 'recroom-studio-launcher', 'recent-studio-projects.json'), 'utf8'),
+    );
+    for (const dir of Object.values(recent ?? {})) if (typeof dir === 'string') candidates.add(dir);
+  } catch {
+  }
+  const found = [];
+  for (const dir of candidates)
+    if (path.isAbsolute(dir) && (await discovery.isStudioProject(dir).catch(() => false))) found.push(dir);
+  return [...new Set(found)].sort();
 }
 
 handle('findOldStudioTemplate', async () => (await oldStudioLauncher())?.template ?? null);

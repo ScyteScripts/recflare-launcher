@@ -1,5 +1,10 @@
 (() => {
-  const D = window.DEMO;
+  const D = {
+    version: '',
+    server: { online: 0, peak: 0, average: 0 },
+    game: { installed: false, folder: '', patch: 'None', real: true },
+    settings: { closeOnPlay: true, autoUpdate: true },
+  };
   const bridge = window.sendPatchKitLauncher2ApiFuncRequest;
   async function call(fullname, args) {
     const reply = await bridge(fullname, args);
@@ -55,20 +60,6 @@
     setTimeout(() => t.remove(), 4000);
   }
 
-  function work(bar, pct, ms) {
-    return new Promise((resolve) => {
-      const start = performance.now();
-      const tick = (now) => {
-        const p = Math.min(1, (now - start) / ms);
-        bar.style.width = `${p * 100}%`;
-        if (pct) pct.textContent = `${Math.round(p * 100)}%`;
-        if (p < 1) requestAnimationFrame(tick);
-        else resolve();
-      };
-      requestAnimationFrame(tick);
-    });
-  }
-
   document.querySelectorAll('[data-win]').forEach((b) =>
     b.addEventListener('click', () => api.windowControl(b.dataset.win)),
   );
@@ -89,7 +80,7 @@
   );
 
   const auth = api.auth ?? null;
-  let account = auth ? null : { ...D.account, profileImage: null, studio: true };
+  let account = null;
   let signIn = null;
 
   const initials = (name) =>
@@ -132,11 +123,7 @@
   }
 
   $('sign-in').addEventListener('click', async () => {
-    if (!auth) {
-      account = { ...D.account, profileImage: null, studio: true };
-      renderAccount();
-      return;
-    }
+    if (!auth) return;
     $('sign-in').disabled = true;
     try {
       signIn = await auth.start();
@@ -183,52 +170,17 @@
       ? g.updateAvailable
         ? `A RecFlare update is ready${g.latestPatch ? ` (patch ${g.latestPatch})` : ''}.`
         : 'RecFlare is installed and ready.'
-      : `RecFlare isn't installed yet. It needs about ${g.sizeGb} GB.`;
-    const facts = g.real
-      ? [
-          ['Game', g.installed ? 'RecFlare 2026' : 'Not installed'],
-          ['Patch', g.installed ? g.patch : 'None'],
-          ['Folder', g.installed ? g.folder : 'None'],
-        ]
-      : [
-          ['Game build', g.installed ? g.build : 'Not installed'],
-          ['Patch', g.installed ? g.patch : 'None'],
-          ['Size on disk', g.installed ? `${g.sizeGb} GB` : '0 GB'],
-          ['Studio', `Version ${D.studio.version}`],
-        ];
+      : "RecFlare isn't installed yet.";
+    const facts = [
+      ['Game', g.installed ? 'RecFlare 2026' : 'Not installed'],
+      ['Patch', g.installed ? g.patch : 'None'],
+      ['Folder', g.installed ? g.folder : 'None'],
+    ];
     $('facts').replaceChildren(...facts.flatMap(([k, v]) => [el('dt', '', k), el('dd', '', v)]));
     $('set-folder').textContent = g.folder;
     $('about-version').textContent = `Version ${D.version}`;
     $('uninstall').disabled = $('verify').disabled = !g.installed;
   }
-  async function gameJob(text, ms, done) {
-    if (busy) return;
-    busy = true;
-    $('game-task').hidden = false;
-    $('game-task-text').textContent = text;
-    document.querySelectorAll('#play, #play-vr, #install').forEach((b) => (b.disabled = true));
-    await work($('game-bar'), $('game-task-pct'), ms);
-    $('game-task').hidden = true;
-    document.querySelectorAll('#play, #play-vr, #install').forEach((b) => (b.disabled = false));
-    busy = false;
-    done();
-  }
-  if (!bridge) $('play').addEventListener('click', () =>
-    gameJob('Checking for a patch', 900, () =>
-      toast('Demo: RecFlare would start now.', 'play'),
-    ),
-  );
-  if (!bridge) $('play-vr').addEventListener('click', () =>
-    gameJob('Checking for a patch', 900, () => toast('Demo: RecFlare would start in VR now.', 'glasses')),
-  );
-  if (!bridge) $('install').addEventListener('click', () =>
-    gameJob('Downloading RecFlare', 4500, () => {
-      D.game.installed = true;
-      renderGame();
-      toast('RecFlare is installed.', 'check');
-    }),
-  );
-
   function renderStats() {
     const stats = [
       ['users', D.server.online, 'Online now'],
@@ -284,7 +236,6 @@
   }
 
   async function hotRooms() {
-    $('rooms').replaceChildren(...D.rooms.map(roomCard));
     try {
       const res = await fetch('https://rooms.recflare.net/rooms/hot?skip=0&take=8');
       const body = await res.json();
@@ -393,7 +344,7 @@
     }
     let mine = null;
     try {
-      mine = api.myRooms ? await api.myRooms() : D.myRooms;
+      mine = api.myRooms ? await api.myRooms() : null;
     } catch {
       mine = null;
     }
@@ -403,86 +354,9 @@
     await showRow('cheered-block', mine.cheered ?? [], 'cheered');
   }
 
-  function renderStudio() {
-    const u = D.studio.unity;
-    $('unity-dot').classList.toggle('off', !u.ready);
-    $('unity-title').textContent = u.ready ? `Unity ${u.version} is ready` : 'Unity is not set up';
-    $('unity-sub').textContent = u.ready ? u.path : 'Studio needs the Unity editor.';
-    const list = D.studio.projects;
-    $('projects').hidden = list.length === 0;
-    $('projects-empty').hidden = list.length > 0;
-    $('projects').replaceChildren(
-      ...list.map((p) => {
-        const open = el('button', 'btn primary sm', icon('external-link'), 'Open in Unity');
-        open.addEventListener('click', () => toast(`Demo: Unity would open ${p.name}.`, 'box'));
-        const folder = el('button', 'btn outline sm', icon('folder-open'), 'Folder');
-        folder.addEventListener('click', () =>
-          toast(`Demo: File Explorer would open ${p.path}.`, 'folder-open'),
-        );
-        const remove = el('button', 'btn ghost icon sm danger', icon('trash-2'));
-        remove.setAttribute('aria-label', `Remove ${p.name}`);
-        remove.title = 'Remove from the list';
-        remove.addEventListener('click', () => {
-          D.studio.projects = D.studio.projects.filter((x) => x.id !== p.id);
-          renderStudio();
-          toast(`${p.name} was removed from the list. Its folder stays on disk.`, 'trash-2');
-        });
-        return el(
-          'li',
-          'project',
-          el('span', 'project-icon', icon('box')),
-          el(
-            'div',
-            '',
-            el('div', 'project-name', p.name),
-            el('div', 'project-sub', p.path),
-            el('div', 'project-sub', `Last edited ${p.edited}`),
-          ),
-          el('div', 'btn-row', open, folder, remove),
-        );
-      }),
-    );
-  }
-  if (!bridge) $('studio-new').addEventListener('click', () => {
-    $('new-project').hidden = false;
-    $('new-name').focus();
-  });
-  $('new-cancel').addEventListener('click', () => ($('new-project').hidden = true));
-  $('new-project').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = $('new-name').value.trim();
-    if (!name) return;
-    D.studio.projects.unshift({
-      id: `p${Date.now()}`,
-      name,
-      edited: 'just now',
-      path: `D:\\RecFlareStudio\\${name.replace(/[^A-Za-z0-9]+/g, '')}`,
-    });
-    $('new-name').value = '';
-    $('new-project').hidden = true;
-    renderStudio();
-    toast(`Created ${name}.`, 'check');
-  });
-  if (!bridge) $('studio-add').addEventListener('click', () =>
-    toast('Demo: the launcher would ask for a project folder.', 'folder-plus'),
-  );
-
   document.querySelectorAll('[data-setting]').forEach((box) => {
     box.checked = !!D.settings[box.dataset.setting];
     box.addEventListener('change', () => (D.settings[box.dataset.setting] = box.checked));
-  });
-  if (!bridge) $('change-folder').addEventListener('click', () =>
-    toast('Demo: the launcher would ask for a folder and move RecFlare there.', 'folder-open'),
-  );
-  if (!bridge) $('verify').addEventListener('click', () => {
-    show('play');
-    void gameJob('Verifying files', 2500, () => toast('All files are fine.', 'check'));
-  });
-  if (!bridge) $('uninstall').addEventListener('click', () => {
-    D.game.installed = false;
-    renderGame();
-    show('play');
-    toast('RecFlare was removed (demo).', 'trash-2');
   });
 
   const WEB = 'https://www.recflare.net';
@@ -544,6 +418,7 @@
   } catch {
   }
   const saveSettings = () => localStorage.setItem(SETTINGS_KEY, JSON.stringify(D.settings));
+  document.querySelectorAll('[data-setting]').forEach((box) => (box.checked = !!D.settings[box.dataset.setting]));
 
   function modal(title, lead, ...body) {
     const backdrop = el('div', 'modal-backdrop');
@@ -753,26 +628,8 @@
   }
 
   let launcherUpdate = null;
-  const demoUpdate = {
-    available: true,
-    current: D.version,
-    latest: '0.2.1',
-    canSelfUpdate: true,
-    url: 'https://github.com/ScyteScripts/recflare-launcher/releases',
-    demo: true,
-  };
   async function launcherUpdates(manual = false) {
-    if (!bridge) {
-      launcherUpdate = demoUpdate;
-      $('about-version').textContent = `Version ${D.version}`;
-      $('check-update').hidden = false;
-      $('about-update').hidden = false;
-      $('about-update').textContent = `Version ${demoUpdate.latest} is ready to install.`;
-      $('launcher-update-text').textContent = `Update to ${demoUpdate.latest}`;
-      $('launcher-update').hidden = false;
-      toast(`Launcher ${demoUpdate.latest} is ready.`, 'download');
-      return;
-    }
+    if (!bridge) return;
     try {
       const v = await call('RecFlareLauncher.launcherVersion');
       D.version = v.version;
@@ -815,17 +672,6 @@
     no.addEventListener('click', m.close);
     yes.addEventListener('click', async () => {
       m.close();
-      if (launcherUpdate.demo) {
-        for (let pct = 0; pct <= 100; pct += 4) {
-          events.get('launcher:update')({ downloading: true, pct });
-          await new Promise((r) => setTimeout(r, 120));
-        }
-        events.get('launcher:update')({ installing: true });
-        await new Promise((r) => setTimeout(r, 1500));
-        toast('Demo: the launcher would close, install 0.2.1 and open again now.', 'check');
-        $('launcher-update-text').textContent = `Update to ${launcherUpdate.latest}`;
-        return;
-      }
       try {
         await call('RecFlareLauncher.launcherInstallUpdate');
       } catch (e) {
@@ -876,7 +722,7 @@
 
   async function offerMigration(manual = false) {
     if (!bridge || (!manual && localStorage.getItem(MIGRATE_KEY))) return;
-    if (manual) toast('Looking for the old RecFlare launchers…', 'refresh-cw');
+    if (manual) toast('Looking for your old RecFlare install…', 'refresh-cw');
     let found;
     try {
       found = await call('RecFlareLauncher.findOldInstalls');
@@ -934,7 +780,7 @@
     const later = el('button', 'btn ghost', 'Not now');
     const never = el('button', 'btn ghost', "Don't ask again");
     const m = modal(
-      'Found your old RecFlare launcher',
+      'Found your old RecFlare install',
       'Move your things over so you can carry on where you left off.',
       el('div', 'modal-rows', ...rows),
       el('div', 'btn-row', move, later, never),
@@ -1006,7 +852,7 @@
     const remove = el('button', 'btn primary', icon('trash-2'), 'Remove them');
     const keep = el('button', 'btn ghost', 'Keep them');
     const m = modal(
-      'Remove the old launchers?',
+      'Remove the old RecFlare install?',
       'Everything is in this launcher now, so the old ones are not needed.',
       el('div', 'modal-rows', ...rows),
       el('div', 'btn-row', remove, keep),
@@ -1040,7 +886,6 @@
   renderAccount();
   renderGame();
   if (bridge && window.RFStudio) window.RFStudio.start();
-  else renderStudio();
   void refreshGame();
   setTimeout(() => void offerMigration(), 1500);
   if (bridge) void launcherUpdates();
@@ -1054,7 +899,6 @@
   }
   window.addEventListener('focus', onLauncherFocus);
   document.addEventListener('visibilitychange', onLauncherFocus);
-  if (!bridge) setTimeout(() => void launcherUpdates(), 2500);
   void slideshow();
   void hotRooms();
   renderStats();

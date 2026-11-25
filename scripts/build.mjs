@@ -76,7 +76,7 @@ export async function build() {
   const page = path.join(root, 'src/renderer');
   const theme = path.join(out, 'theme');
   fs.mkdirSync(theme, {recursive: true});
-  for (const file of ['index.html', 'styles.css', 'app.js', 'demo.js', 'icons.js', 'studio.js'])
+  for (const file of ['index.html', 'styles.css', 'app.js', 'icons.js', 'studio.js'])
     if (fs.existsSync(path.join(page, file))) fs.copyFileSync(path.join(page, file), path.join(theme, file));
   for (const dir of ['img', 'fonts'])
     fs.cpSync(path.join(page, dir), path.join(theme, dir), {recursive: true});

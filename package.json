@@ -19,7 +19,7 @@
     "check:source": "python scripts/check-source.py",
     "assets": "node scripts/assets.js",
     "start": "npm run package && node scripts/run.mjs",
-    "check": "node --check src/renderer/app.js && node --check src/renderer/demo.js && node --check src/recflare/main.cjs"
+    "check": "node --check src/renderer/app.js && node --check src/renderer/studio.js && node --check src/recflare/main.cjs && node --check src/recflare/game.cjs && node --check src/recflare/update.cjs"
   },
   "engines": {
     "node": ">=22.12"

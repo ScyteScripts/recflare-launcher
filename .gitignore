@@ -1,5 +1,5 @@
-node_modules/
-dist/
+/node_modules/
+/dist/
 src/renderer/icons.js
 src/renderer/fonts/
 /.local/

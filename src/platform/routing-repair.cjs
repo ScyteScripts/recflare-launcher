@@ -161,7 +161,9 @@ async function repairLauncherRouting({appId, configName, userData, env = process
     if(discoverUnknown && searchRoots===undefined) {
       try {fromHub=hubProjects(env,platform);}catch(error){warn('hub-projects','Unity Hub project list',error);}
     }
-    const roots=discoverUnknown ? searchRoots ?? [env.USERPROFILE || env.HOME || os.homedir(),...projects.filter(p=>typeof p==='string' && path.isAbsolute(p)).map(p=>path.dirname(p)),...fromHub] : [];
+    // Only projects the launcher already knows about and Unity Hub's own list: no crawl of the
+    // whole user folder.
+    const roots=discoverUnknown ? searchRoots ?? [...fromHub] : [];
     projects.push(...await discoverProjects(roots,{onWarning:(file,error)=>warn('project-search',file,error)}));
     for(const project of new Set(projects)) {
       if(typeof project!=='string' || !path.isAbsolute(project))continue;
@@ -193,5 +195,5 @@ async function repairInstalledDevelopmentTemplates({registeredApps, startRepair}
     }
   }
 }
-module.exports = {repairText, repairFiles, repairLauncherRouting, removeDevelopmentTemplate, completeTemplateReinstall,
+module.exports = {windowsProjects, repairText, repairFiles, repairLauncherRouting, removeDevelopmentTemplate, completeTemplateReinstall,
   needsDevelopmentTemplateReinstall, repairDevelopmentProfiles, repairDevelopmentProject, repairInstalledDevelopmentTemplates, STUDIO_APP_ID};

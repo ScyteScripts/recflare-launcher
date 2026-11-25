@@ -1,0 +1,61 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fetchAppMoveTaskState = void 0;
+const _1 = require("./$");
+const app_new_root_dir_does_not_have_enough_free_space_for_move_task_1 = require("./app-new-root-dir-does-not-have-enough-free-space-for-move-task");
+const app_new_root_dir_permissions_are_insufficient_1 = require("./app-new-root-dir-permissions-are-insufficient");
+const app_root_dir_permissions_are_insufficient_1 = require("./app-root-dir-permissions-are-insufficient");
+const libpkapps_binding_1 = require("./libpkapps-binding");
+const libpkapps_binding_fatal_error_name_1 = require("./libpkapps_binding_fatal_error_name");
+exports.fetchAppMoveTaskState = _1.__.declareManagedFunc()
+    .name(`fetchAppMoveTaskState`)
+    .namespace(_1.$namespace)
+    .errorTypes([])
+    .async()
+    .execute(async ({ appMoveTaskId, }) => {
+    const libpkappsBindingFuncExecResultDef = _1.__.$refstructdi(_1.__.$refnapi)({
+        id: _1.__.$refnapi.types.int32,
+        hasFinished: _1.__.$refnapi.types.bool,
+        hasErrorField: _1.__.$refnapi.types.bool,
+        error: _1.__.$refnapi.types.int32,
+    });
+    const libpkappsBindingFuncExecResultPointer = _1.__.$refnapi.alloc(libpkappsBindingFuncExecResultDef);
+    const libpkappsBindingFuncExecErrorName = await new Promise((resolve, reject) => {
+        _1.__.checkAssertion(libpkapps_binding_1.LIBPKAPPS_BINDING.value !== undefined);
+        libpkapps_binding_1.LIBPKAPPS_BINDING.value.getPatchKitAppMoveTaskState.async(appMoveTaskId, libpkappsBindingFuncExecResultPointer, (e, r) => {
+            if (e !== null) {
+                reject(e);
+            }
+            resolve(r);
+        });
+    });
+    if (libpkappsBindingFuncExecErrorName
+        ===
+            libpkapps_binding_fatal_error_name_1.LIBPKAPPS_BINDING_FATAL_ERROR_NAME.value) {
+        throw new _1.__.FatalError();
+    }
+    _1.__.checkAssertion(libpkappsBindingFuncExecErrorName === null);
+    const libpkappsBindingFuncExecResult = _1.__.$refnapi.deref(libpkappsBindingFuncExecResultPointer);
+    return {
+        errorTypeName: libpkappsBindingFuncExecResult.hasErrorField
+            ? _1.__.invokeSyncExp(() => {
+                switch (libpkappsBindingFuncExecResult.error) {
+                    case 0:
+                        return _1.__.FatalError.name;
+                    case 1:
+                        return _1.__.FatalError.name;
+                    case 2:
+                        return app_new_root_dir_does_not_have_enough_free_space_for_move_task_1.AppNewRootDirDoesNotHaveEnoughFreeSpaceForMoveTask.name;
+                    case 3:
+                        return app_root_dir_permissions_are_insufficient_1.AppRootDirPermissionsAreInsufficient.name;
+                    case 4:
+                        return app_new_root_dir_permissions_are_insufficient_1.AppNewRootDirPermissionsAreInsufficient.name;
+                }
+                _1.__.checkInvalidAssertion();
+            })
+            : undefined,
+        isFinished: libpkappsBindingFuncExecResult.hasFinished,
+    };
+}).fetchAppMoveTaskState;
+exports.fetchAppMoveTaskState.config.isLoggingEnabled = false;
+//# sourceMappingURL=fetch-app-move-task-state.js.map
