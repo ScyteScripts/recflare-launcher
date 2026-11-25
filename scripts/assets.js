@@ -1,0 +1,30 @@
+const fs = require('node:fs');
+const path = require('node:path');
+
+const root = path.join(__dirname, '..');
+const out = path.join(root, 'src', 'renderer');
+
+const fonts = [
+  ['@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2', 'BricolageGrotesque.woff2'],
+  ['@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2', 'Figtree.woff2'],
+];
+fs.mkdirSync(path.join(out, 'fonts'), { recursive: true });
+for (const [from, to] of fonts)
+  fs.copyFileSync(path.join(root, 'node_modules', from), path.join(out, 'fonts', to));
+
+const ICONS = [
+  'gamepad-2', 'box', 'settings', 'log-in', 'log-out', 'minus', 'square', 'x', 'monitor', 'glasses',
+  'download', 'folder-open', 'folder-plus', 'plus', 'external-link', 'users', 'trending-up',
+  'activity', 'git-fork', 'flame', 'footprints', 'heart', 'upload', 'play', 'check', 'refresh-cw',
+  'hard-drive', 'info', 'door-open', 'shirt', 'calendar-days', 'trash-2', 'circle-alert',
+];
+const icons = {};
+for (const name of ICONS) {
+  const svg = fs.readFileSync(path.join(root, 'node_modules', 'lucide-static', 'icons', `${name}.svg`), 'utf8');
+  icons[name] = svg.replace(/<!--[\s\S]*?-->/g, '').replace(/\s+/g, ' ').trim();
+}
+fs.writeFileSync(
+  path.join(out, 'icons.js'),
+  `window.ICONS = ${JSON.stringify(icons, null, 1)};\n`,
+);
+console.log(`assets: ${fonts.length} fonts, ${ICONS.length} icons`);
