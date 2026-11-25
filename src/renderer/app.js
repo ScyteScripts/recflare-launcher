@@ -230,7 +230,7 @@
     const card = el('li', 'room', art, el('div', 'room-name', `^${r.name}`), el('div', 'room-by', r.by ? `@${r.by}` : ''));
     card.tabIndex = 0;
     card.addEventListener('click', () =>
-      api.openExternal(`https://www.recflare.net/rooms/${encodeURIComponent(r.name)}`),
+      api.openExternal(`https://www.recflare.net/rooms/${encodeURIComponent(r.id)}`),
     );
     return card;
   }
@@ -253,7 +253,8 @@
       $('rooms').replaceChildren(
         ...list.map((x) =>
           roomCard({
-            name: x.Name,
+            id: x.RoomId,
+          name: x.Name,
             by: names.get(x.CreatorAccountId) ?? '',
             visits: compact(x.Stats?.VisitCount),
             cheers: compact(x.Stats?.CheerCount),
@@ -278,7 +279,8 @@
       }
     return list.map((x) =>
       roomCard({
-        name: x.Name,
+        id: x.RoomId,
+          name: x.Name,
         by: names.get(x.CreatorAccountId) ?? '',
         visits: compact(x.Stats?.VisitCount),
         cheers: compact(x.Stats?.CheerCount),
@@ -310,7 +312,7 @@
       }
       slide.append(el('span', 'slide-shade'), el('span', 'slide-name', `^${r.RoomName}`));
       slide.addEventListener('click', () =>
-        api.openExternal(`https://www.recflare.net/rooms/${encodeURIComponent(r.RoomName)}`),
+        api.openExternal(`https://www.recflare.net/rooms/${encodeURIComponent(r.RoomId)}`),
       );
       return slide;
     });
