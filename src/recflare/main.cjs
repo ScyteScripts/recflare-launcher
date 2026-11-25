@@ -224,6 +224,8 @@ handle('authSignout', () => {
   forget();
 });
 
+handle('openWindowsSecurity', () => shell.openExternal('windowsdefender://threat'));
+
 handle('openFolder', async (_event, dirPath) => {
   const target = path.resolve(String(dirPath ?? ''));
   const stat = await fs.promises.stat(target).catch(() => null);
@@ -258,11 +260,14 @@ async function oldStudioLauncher() {
   const here = path.dirname(app.getPath('exe')).toLowerCase();
   if (dir.toLowerCase() === here) return null;
   const exe = ['Rec Room Studio Launcher.exe', 'RecFlare Studio Launcher.exe'].find((name) => fs.existsSync(path.join(dir, name)));
-  if (!exe) return null;
-  const uninstaller = ['Uninstall Source Launcher.exe', 'Uninstall Rec Room Studio Launcher.exe']
-    .map((name) => path.join(dir, name))
-    .find((file) => fs.existsSync(file));
-  return { dir, uninstaller: uninstaller ?? null, template: oldStudioTemplate(dir) };
+  const template = oldStudioTemplate(dir);
+  if (!exe && !template) return null;
+  const uninstaller = exe
+    ? ['Uninstall Source Launcher.exe', 'Uninstall Rec Room Studio Launcher.exe']
+        .map((name) => path.join(dir, name))
+        .find((file) => fs.existsSync(file))
+    : undefined;
+  return { dir, uninstaller: uninstaller ?? null, template };
 }
 
 function oldStudioTemplate(dir) {
@@ -289,6 +294,29 @@ async function oldStudioProjects() {
   for (const dir of await Promise.race([scan, timeout])) found.add(dir);
   return [...found].sort();
 }
+
+handle('findOldStudioTemplate', async () => (await oldStudioLauncher())?.template ?? null);
+
+handle('adoptStudioFolder', async (_event, { appId, appBranchId, dir } = {}) => {
+  const folder = path.resolve(String(dir ?? ''));
+  let data;
+  try {
+    data = JSON.parse(fs.readFileSync(path.join(folder, 'app_data.json'), 'utf8'));
+  } catch {
+    throw new Error('That folder does not have a RecFlare Studio install in it.');
+  }
+  if (data.is_installed !== true) throw new Error('The Studio install in that folder did not finish. Install a fresh copy instead.');
+  const P = require('../launcher/$').__.PatchKitLauncher2;
+  await P.retrieveAppBranchInfo({ appId, appBranchId });
+  const settings = await P.fetchSettings();
+  const apps = { ...(settings.apps ?? {}) };
+  const app_ = { ...(apps[appId] ?? {}) };
+  app_.branches = { ...(app_.branches ?? {}), [appBranchId]: { ...(app_.branches?.[appBranchId] ?? {}), rootDirPath: folder } };
+  apps[appId] = app_;
+  await P.saveSettingsFileStore({ settings: { ...settings, apps } });
+  await P.fetchAppBranchInternalState({ appId, appBranchId }).catch(() => {});
+  return { installedVersionId: data.installed_version_id ?? null };
+});
 
 handle('findOldInstalls', async () => ({
   game: await game.oldInstall(),

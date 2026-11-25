@@ -40,7 +40,7 @@ const save_pending_check_for_recroom_updates_command_info_file_store_1 = require
         configName: _1.__.PatchKitLauncher2.CONFIG.value.name,
         developmentOnly: true,
         ...(process.env.STUDIO_LAUNCHER_VALIDATION_ROOT ? {registeredProjects: [], searchRoots: [process.env.STUDIO_LAUNCHER_VALIDATION_ROOT]} : {}),
-    }).catch(() => _1.__.$electron.dialog.showErrorBox('Some Studio projects could not be checked', 'Close Unity and run Repair to finish checking Studio project routing.'));
+    }).catch(() => _1.__.$electron.dialog.showErrorBox('Close Unity to finish', 'Some Studio projects are open in Unity, so they could not be checked. Close Unity and Unity Hub completely, then click Repair on the Studio page.'));
     // TODO: Remove this export as soon as SDK bug is fixed
     _1.__.PatchKitLauncher2.exportApiFunc(_1.__.PatchKitLauncher2.fetchIsAppBranchPasswordValid);
     _1.__.PatchKitLauncher2.exportApiFunc(create_unity_project_from_recroom_studio_template_1.createUnityProjectFromRecRoomStudioTemplate);

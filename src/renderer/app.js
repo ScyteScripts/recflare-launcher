@@ -215,12 +215,7 @@
   }
   if (!bridge) $('play').addEventListener('click', () =>
     gameJob('Checking for a patch', 900, () =>
-      toast(
-        D.settings.startInVr
-          ? 'Demo: RecFlare would start in VR now.'
-          : 'Demo: RecFlare would start now.',
-        'play',
-      ),
+      toast('Demo: RecFlare would start now.', 'play'),
     ),
   );
   if (!bridge) $('play-vr').addEventListener('click', () =>
@@ -601,6 +596,7 @@
     try {
       await call('RecFlareLauncher.gameRepair');
       toast('RecFlare is up to date.', 'check');
+      await checkPatch();
     } catch {
     }
   }
@@ -614,16 +610,46 @@
       $('game-bar').style.width = `${p.pct ?? 100}%`;
       $('game-bar').parentElement.classList.toggle('indeterminate', p.pct === undefined);
     } else {
-      if (p.error) toast(p.error, 'circle-alert');
+      if (p.code === 'AV_BLOCKED') showBlocked();
+      else if (p.error) toast(p.error, 'circle-alert');
       void refreshGame();
     }
   });
+
+  let blockedOpen = false;
+  function showBlocked() {
+    if (blockedOpen) return;
+    blockedOpen = true;
+    const open = el('button', 'btn primary', icon('external-link'), 'Open Windows Security');
+    const retry = el('button', 'btn outline', icon('refresh-cw'), 'Try again');
+    const close = el('button', 'btn ghost', 'Close');
+    const m = modal(
+      'Windows Security blocked the RecFlare patch',
+      'Windows flags the RecFlare patch (its Injector.exe), so it was not updated. This is the RecFlare game patch, not the launcher.',
+      el(
+        'p',
+        'muted',
+        'To use it anyway, open Windows Security, find the RecFlare patch under Protection history, and choose Allow on device. Then click Try again. Only do this if you trust the RecFlare patch.',
+      ),
+      el('div', 'btn-row', open, retry, close),
+    );
+    const done = () => {
+      blockedOpen = false;
+      m.close();
+    };
+    open.addEventListener('click', () => call('RecFlareLauncher.openWindowsSecurity').catch(() => {}));
+    retry.addEventListener('click', () => {
+      done();
+      void updatePatch();
+    });
+    close.addEventListener('click', done);
+  }
 
   async function realPlay(vr) {
     try {
       if (D.settings.autoUpdate && (await call('RecFlareLauncher.gameNeedsPatch'))) {
         toast('Updating the RecFlare patch first…', 'download');
-        await call('RecFlareLauncher.gameRepair');
+        await call('RecFlareLauncher.gameRepair').catch(() => {});
       }
       await call('RecFlareLauncher.gamePlay', { vr });
       toast(vr ? 'Starting RecFlare in VR…' : 'Starting RecFlare…', vr ? 'glasses' : 'play');
@@ -677,7 +703,7 @@
   }
 
   if (bridge) {
-    $('play').addEventListener('click', () => realPlay(!!D.settings.startInVr));
+    $('play').addEventListener('click', () => realPlay(false));
     $('play-vr').addEventListener('click', () => realPlay(true));
     $('install').addEventListener('click', () => realInstall());
     $('game-update').addEventListener('click', () => updatePatch());
@@ -1018,7 +1044,17 @@
   void refreshGame();
   setTimeout(() => void offerMigration(), 1500);
   if (bridge) void launcherUpdates();
-  else setTimeout(() => void launcherUpdates(), 2500);
+
+  let lastFocusCheck = Date.now();
+  function onLauncherFocus() {
+    if (!bridge || document.visibilityState === 'hidden' || Date.now() - lastFocusCheck < 60 * 1000) return;
+    lastFocusCheck = Date.now();
+    if (account?.studio === true) window.RFStudio?.checkNow();
+    void checkPatch();
+  }
+  window.addEventListener('focus', onLauncherFocus);
+  document.addEventListener('visibilitychange', onLauncherFocus);
+  if (!bridge) setTimeout(() => void launcherUpdates(), 2500);
   void slideshow();
   void hotRooms();
   renderStats();

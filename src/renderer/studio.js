@@ -200,6 +200,8 @@
   }
 
   async function installPathStep() {
+    if (st.oldTemplate === undefined)
+      st.oldTemplate = await call('RecFlareLauncher.findOldStudioTemplate').catch(() => null);
     if (st.installPath === undefined) {
       try {
         const info = await call(PK + 'fetchAppBranchInfo', ids());
@@ -209,9 +211,30 @@
     }
     const input = el('input', 'input path');
     input.readOnly = true;
-    step(`path:${st.installPath}`, () => {
+    step(`path:${st.installPath}:${st.oldTemplate ?? ''}`, () => {
       input.value = winPath(st.installPath) ?? '';
+      const existing = st.oldTemplate
+        ? [
+            el('h2', '', 'Use the Studio you already have'),
+            el('p', 'muted', 'The old Studio launcher installed RecFlare Studio here. Use it and nothing is downloaded again:'),
+            el('div', 'input path', winPath(st.oldTemplate)),
+            el(
+              'div',
+              'btn-row',
+              button('Use this Studio', 'check', 'primary', async () => {
+                try {
+                  await adoptTemplate(st.oldTemplate);
+                  RF.toast('Using your existing RecFlare Studio.', 'check');
+                } catch (e) {
+                  fail(e?.message || 'That Studio folder could not be used. Install a fresh copy instead.');
+                }
+              }),
+            ),
+            el('hr', 'step-sep'),
+          ]
+        : [];
       return [
+        ...existing,
         el('h2', '', 'Install RecFlare Studio'),
         el('p', 'muted', 'RecFlare Studio will be installed to:'),
         input,
@@ -844,19 +867,27 @@
   }
   async function adoptTemplate(dir) {
     await resolveIds();
-    try {
-      await call(PK + 'registerAppBranch', {
-        ...ids(),
-        appBranchRootDirPath: dir,
-        isAppBranchNotEmptyRootDirAllowed: true,
-      });
-    } catch (e) {
-      if (!isError(e, 'AppBranchIsAlreadyRegistered')) throw e;
-    }
+    await call('RecFlareLauncher.adoptStudioFolder', { ...ids(), dir });
+    st.oldTemplate = null;
     st.stepKey = '';
     st.latestAt = 0;
     void tick();
   }
 
-  window.RFStudio = { start, importProjects, knownProjects, needsTemplate, adoptTemplate };
+  async function checkNow() {
+    if (st.branchId === undefined || ticking) return;
+    try {
+      const s = await call(PK + 'retrieveAppBranchState', ids());
+      if (!s || s.installedVersionId === undefined || s.ongoingTaskId !== undefined || lastTaskFailed(s)) return;
+      st.latestAt = Date.now();
+      st.latest = await call(PK + 'fetchAppBranchLatestVersionId', ids());
+      if (st.latest !== undefined && st.latest !== s.installedVersionId) {
+        RF.toast('Updating RecFlare Studio…', 'download');
+        await startUpdate();
+      }
+    } catch {
+    }
+  }
+
+  window.RFStudio = { start, importProjects, knownProjects, needsTemplate, adoptTemplate, checkNow };
 })();

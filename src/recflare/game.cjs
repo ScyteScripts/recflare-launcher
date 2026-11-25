@@ -157,8 +157,23 @@ async function installPatch(dir) {
     'Downloading the RecFlare patch',
   );
   progress('Installing the RecFlare patch');
-  await extract(zip, dir);
-  fs.rmSync(zip, { force: true });
+  try {
+    if (!fs.existsSync(zip)) throw Object.assign(new Error('patch file removed'), { blocked: true });
+    await extract(zip, dir);
+  } catch (error) {
+    const text = `${error?.message ?? ''} ${error?.stderr ?? ''}`;
+    if (error?.blocked || /virus|potentially unwanted|ENOENT|EPERM|EACCES|Operation did not complete/i.test(text))
+      throw Object.assign(
+        new Error(
+          'Windows Security blocked the RecFlare patch, so it was not updated. Windows flags the patch\'s Injector.exe. ' +
+            'The patch comes from github.com/recflare/patch-2026.',
+        ),
+        { code: 'AV_BLOCKED' },
+      );
+    throw error;
+  } finally {
+    fs.rmSync(zip, { force: true });
+  }
   fs.writeFileSync(path.join(dir, 'steam_appid.txt'), '480');
   writePatchIni(dir);
   writeMarker(dir, { patch: version, patchedAt: new Date().toISOString() });
@@ -217,7 +232,7 @@ async function job(kind, fn) {
     send({ running: false, done: kind });
     return result;
   } catch (error) {
-    send({ running: false, error: error.message });
+    send({ running: false, error: error.message, code: error.code ?? null });
     throw error;
   } finally {
     task = null;

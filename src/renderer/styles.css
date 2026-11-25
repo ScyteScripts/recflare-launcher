@@ -1289,3 +1289,10 @@ body[data-view='play'] .stats {
 .update-pill:hover {
   background: rgb(254 113 1 / 24%);
 }
+
+.step-sep {
+  width: 100%;
+  margin: 0.75rem 0 0.25rem;
+  border: 0;
+  border-top: 1px solid var(--border);
+}

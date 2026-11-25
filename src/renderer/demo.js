@@ -39,5 +39,5 @@ window.DEMO = {
       { RoomId: 3, Name: 'OrbitObby', ImageName: '', Stats: { VisitCount: 9400, CheerCount: 212 } },
     ],
   },
-  settings: { closeOnPlay: true, startInVr: false, autoUpdate: true },
+  settings: { closeOnPlay: true, autoUpdate: true },
 };
